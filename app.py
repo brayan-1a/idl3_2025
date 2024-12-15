@@ -1,62 +1,39 @@
 import streamlit as st
 import pandas as pd
-from supabase import create_client, Client
-import altair as alt
+import plotly.express as px
 
-#Configurar el Supabase
-url = "https://adfoiwetcaqxzdudmbsz.supabase.co"
-key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkZm9pd2V0Y2FxeHpkdWRtYnN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA4NTk5NzcsImV4cCI6MjA0NjQzNTk3N30.W7b6z-leiI_igua5iND3FcoHaF5iGTjRf_DSBP0UDRg"
-supabase: Client = create_client(url, key)
+# Cargar el archivo CSV
+data = pd.read_csv('resultados_modelo_ventas.csv')
 
-# Cargar datos de Supabase
-def cargar_datos_supabase():
-    response = supabase.table("ventas_cafe").select("*").execute()
-    
-    # Verificar si la respuesta contiene errores o está vacía
-    if hasattr(response, 'error') and response.error:
-        st.error(f"Error al cargar datos desde Supabase: {response.error}")
-        return pd.DataFrame()
-    elif not response.data:
-        st.warning("No se encontraron datos en la tabla 'ventas_cafe'.")
-        return pd.DataFrame()
-    else:
-        # Convertir a DataFrame y asegurar que la columna 'fecha' sea datetime
-        df = pd.DataFrame(response.data)
-        df['fecha'] = pd.to_datetime(df['fecha'])  # Asegurarse que sea datetime
-        return df
+# Título de la app
+st.title('Análisis de Ventas')
 
-# Datos
-df = cargar_datos_supabase()
+# Filtro interactivo para seleccionar la categoría de producto
+categoria = st.selectbox('Selecciona la categoría de producto:', ['Todas'] + list(data['Categoría_Producto'].unique()))
 
-# Interfaz de Streamlit
-st.title("Dashboard de Ventas de Café")
-st.subheader("Análisis de Ventas de Café")
+# Filtrar los datos según la categoría seleccionada
+if categoria == 'Todas':
+    df_filtrado = data
+else:
+    df_filtrado = data[data['Categoría_Producto'] == categoria]
 
-# Filtro por fecha
-fecha_seleccionada = st.date_input("Selecciona una fecha", value=pd.to_datetime("2024-11-01"))
+# Gráfico de dispersión
+st.subheader('Gráfico de Dispersión: Relación entre Precio y Ventas Predichas')
+fig_dispersion = px.scatter(df_filtrado, x="Precio", y="Ventas_Predichas",
+                            color="Categoría_Producto", title="Relación entre Precio y Ventas Predichas")
+st.plotly_chart(fig_dispersion)
 
-# Filtrar el DataFrame por la fecha seleccionada
-df_filtrado = df[df['fecha'].dt.date == fecha_seleccionada]  # Ignorar la hora para comparar solo la fecha
+# Gráfico de barras
+st.subheader('Gráfico de Barras: Ventas Predichas por Categoría de Producto')
+fig_barras = px.bar(df_filtrado.groupby('Categoría_Producto')['Ventas_Predichas'].sum().reset_index(),
+                    x="Categoría_Producto", y="Ventas_Predichas",
+                    color='Categoría_Producto',
+                    title="Ventas Predichas por Categoría de Producto")
+st.plotly_chart(fig_barras)
 
-# Mostrar datos filtrados
-st.write("Datos de ventas para la fecha seleccionada:", df_filtrado)
-
-# Gráfico de barras: Ventas por Producto
-grafico_barras = alt.Chart(df_filtrado).mark_bar().encode(
-    x='producto:N',
-    y='cantidad:Q',
-    color='producto:N'
-).properties(
-    title='Cantidad Vendida por Producto'
-)
-st.altair_chart(grafico_barras, use_container_width=True)
-
-# Gráfico de líneas: Total de Ventas en el Tiempo
-grafico_lineas = alt.Chart(df).mark_line().encode(
-    x='fecha:T',
-    y='precio_total:Q',
-    color='producto:N'
-).properties(
-    title='Total de Ventas en el Tiempo por Producto'
-)
-st.altair_chart(grafico_lineas, use_container_width=True)
+# Gráfico de línea
+st.subheader('Gráfico de Línea: Ventas Predichas por Mes')
+fig_linea = px.line(df_filtrado.groupby('Mes')['Ventas_Predichas'].sum().reset_index(),
+                    x="Mes", y="Ventas_Predichas",
+                    title="Ventas Predichas por Mes")
+st.plotly_chart(fig_linea)

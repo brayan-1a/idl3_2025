@@ -1,5 +1,3 @@
-streamlit
 pandas
-supabase
-altair
-scikit-learn
+plotly
+streamlit
