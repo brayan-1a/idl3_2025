@@ -25,6 +25,8 @@ fig_dispersion.update_layout(
     title=dict(font=dict(color='black')),  # Color del título
     xaxis_title=dict(text='Precio', font=dict(color='black')),  # Color del título del eje X
     yaxis_title=dict(text='Ventas Predichas', font=dict(color='black')),  # Color del título del eje Y
+    xaxis=dict(tickfont=dict(color='black')),  # Color de los valores del eje X
+    yaxis=dict(tickfont=dict(color='black')),  # Color de los valores del eje Y
     legend=dict(font=dict(color='black'))  # Color de la leyenda
 )
 st.plotly_chart(fig_dispersion)
@@ -47,6 +49,8 @@ fig_barras.update_layout(
     title=dict(font=dict(color='black')),  # Color del título
     xaxis_title=dict(text='Mes', font=dict(color='black')),  # Color del título del eje X
     yaxis_title=dict(text='Ventas Predichas', font=dict(color='black')),  # Color del título del eje Y
+    xaxis=dict(tickfont=dict(color='black')),  # Color de los valores del eje X
+    yaxis=dict(tickfont=dict(color='black')),  # Color de los valores del eje Y
     legend=dict(font=dict(color='black'))  # Color de la leyenda
 )
 st.plotly_chart(fig_barras)
@@ -62,6 +66,8 @@ fig_linea.update_layout(
     font=dict(color='black'),  # Color de la fuente del gráfico
     title=dict(font=dict(color='black')),  # Color del título
     xaxis_title=dict(text='Mes', font=dict(color='black')),  # Color del título del eje X
-    yaxis_title=dict(text='Ventas Predichas', font=dict(color='black'))  # Color del título del eje Y
+    yaxis_title=dict(text='Ventas Predichas', font=dict(color='black')),  # Color del título del eje Y
+    xaxis=dict(tickfont=dict(color='black')),  # Color de los valores del eje X
+    yaxis=dict(tickfont=dict(color='black'))  # Color de los valores del eje Y
 )
 st.plotly_chart(fig_linea)
