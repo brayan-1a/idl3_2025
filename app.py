@@ -16,13 +16,16 @@ else:
 
 # Crear gráfico de dispersión
 fig_dispersion = px.scatter(df_filtrado, x="Precio", y="Ventas_Predichas", color="Categoría_Producto", title="Relación entre Precio y Ventas Predichas")
-# Establecer fondo y borde para el gráfico de dispersión
+# Establecer fondo, borde y colores de texto para el gráfico de dispersión
 fig_dispersion.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',  # Fondo transparente para el área del gráfico
     paper_bgcolor='rgba(255,255,255,0.9)',  # Fondo blanco para el cuadro del gráfico
     margin=dict(t=40, b=40, l=40, r=40),  # Márgenes alrededor del gráfico
     font=dict(color='black'),  # Color de la fuente del gráfico
-    title=dict(font=dict(color='black'))  # Color del título
+    title=dict(font=dict(color='black')),  # Color del título
+    xaxis_title=dict(color='black'),  # Color del título del eje X
+    yaxis_title=dict(color='black'),  # Color del título del eje Y
+    legend=dict(font=dict(color='black'))  # Color de la leyenda
 )
 st.plotly_chart(fig_dispersion)
 
@@ -33,27 +36,32 @@ df_barras = df_filtrado.groupby('Mes')['Ventas_Predichas'].sum().reset_index()
 fig_barras = px.bar(df_barras, x="Mes", y="Ventas_Predichas",
                     title="Ventas Predichas por Mes",
                     color="Ventas_Predichas", 
-                    color_continuous_scale="RdYlGn_r",  # Aquí se usa la escala de color rojo a verde (invertido)
+                    color_continuous_scale="RdYlGn_r",  # Escala de color rojo a verde (invertido)
                     labels={'Ventas_Predichas': 'Ventas Predichas'})
-# Establecer fondo y borde para el gráfico de barras
+# Establecer fondo, borde y colores de texto para el gráfico de barras
 fig_barras.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',  # Fondo transparente para el área del gráfico
     paper_bgcolor='rgba(255,255,255,0.9)',  # Fondo blanco para el cuadro del gráfico
     margin=dict(t=40, b=40, l=40, r=40),  # Márgenes alrededor del gráfico
     font=dict(color='black'),  # Color de la fuente del gráfico
-    title=dict(font=dict(color='black'))  # Color del título
+    title=dict(font=dict(color='black')),  # Color del título
+    xaxis_title=dict(color='black'),  # Color del título del eje X
+    yaxis_title=dict(color='black'),  # Color del título del eje Y
+    legend=dict(font=dict(color='black'))  # Color de la leyenda
 )
 st.plotly_chart(fig_barras)
 
 # Crear gráfico de línea
 fig_linea = px.line(df_filtrado.groupby('Mes')['Ventas_Predichas'].sum().reset_index(), 
                     x="Mes", y="Ventas_Predichas", title="Ventas Predichas por Mes")
-# Establecer fondo y borde para el gráfico de línea
+# Establecer fondo, borde y colores de texto para el gráfico de línea
 fig_linea.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',  # Fondo transparente para el área del gráfico
     paper_bgcolor='rgba(255,255,255,0.9)',  # Fondo blanco para el cuadro del gráfico
     margin=dict(t=40, b=40, l=40, r=40),  # Márgenes alrededor del gráfico
     font=dict(color='black'),  # Color de la fuente del gráfico
-    title=dict(font=dict(color='black'))  # Color del título
+    title=dict(font=dict(color='black')),  # Color del título
+    xaxis_title=dict(color='black'),  # Color del título del eje X
+    yaxis_title=dict(color='black')  # Color del título del eje Y
 )
 st.plotly_chart(fig_linea)
